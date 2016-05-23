@@ -1,0 +1,33 @@
+#!/usr/bin/php
+<?php
+
+
+class Parser {
+
+  private $iDir;
+  private $file2Parse;
+  
+  
+  public function __construct() {
+    global $argv;
+    
+    $this->iDir = dirname( __FILE__ ). '/';
+    
+    
+    if( !isset( $argv[ 1 ] ) ) {
+      throw new Exception( 'Missing first argument (file to parse)' );
+    }
+    $this->file2Parse =  $this->iDir. $argv[ 1 ];
+    if( !is_file( $this->file2Parse ) ) {
+      throw new Exception( 'Is not a file: '. $this->file2Parse );
+    }
+  }
+  
+  
+  public function parse( $path ) {
+  }
+  
+}
+
+
+new Parser();
