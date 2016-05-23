@@ -9,6 +9,9 @@ include_once( dirname( __FILE__ ). '/URLListItem.inc' );
 
 class Parser {
 
+  const CLI_OPTIONS = 'dj';
+  
+  
   private $iDir;
   private $file2Parse;
   
@@ -20,26 +23,27 @@ class Parser {
     $this->iDir = dirname( __FILE__ ). '/';
     
     // Init arguments
-    if( !isset( $argv[ 1 ] ) ) {
-      throw new Exception( 'Missing first argument (file to parse)' );
+    if( count( $argv ) == 1 ) {
+      throw new \Exception( 'Missing last argument (file to parse)' );
     }
-    $this->file2Parse =  $this->iDir. $argv[ 1 ];
+    $this->file2Parse =  $this->iDir. $argv[ count( $argv ) - 1 ];
     if( !is_file( $this->file2Parse ) ) {
-      throw new Exception( 'Is not a file: '. $this->file2Parse );
+      throw new \Exception( 'Is not a file: '. $this->file2Parse );
     }
     
     // Run
-    $urlItems = $this->parse( $this->file2Parse );
-    foreach( $urlItems as $urlItem )
-      echo $urlItem. PHP_EOL;
+    $urlItems = self::parse( $this->file2Parse );
+    $cliOptions = getopt( self::CLI_OPTIONS );
+    self::print_i( $urlItems, $cliOptions );
   }
   
   
-  public function parse( $path ) {
+  public static function parse( $path ) {
     $fData = file_get_contents( $path );
     
     $urls = [];
-    preg_match_all( '/<i[^>]*\'([^\']*listen\.pls[^\']*)\'\);/', $fData, $matches );
+    preg_match_all(
+      '/<i[^>]*\'([^\']*listen\.pls[^\']*)\'\);/', $fData, $matches );
     foreach( $matches[ 1 ] as $m )
       $urls []= $m;
 //     print_r( $urls );
@@ -59,6 +63,25 @@ class Parser {
     return $urlItems;
   }
   
+  
+  public static function print_i( array $urlItems, array $cliOptions ) {
+    if( isset( $cliOptions[ 'j' ] ) ) {
+      self::print_java( $urlItems );
+    }
+    else {
+      self::print_debug( $urlItems );
+    }
+  }
+  
+  public static function print_debug( array $urlItems ) {
+    foreach( $urlItems as $urlItem )
+      echo $urlItem. PHP_EOL;
+  }
+  
+  public static function print_java( array $urlItems ) {
+    foreach( $urlItems as $urlItem )
+      echo '### '. $urlItem. PHP_EOL;
+  }
 }
 
 
