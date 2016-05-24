@@ -9,7 +9,7 @@ include_once( dirname( __FILE__ ). '/URLListItem.inc' );
 
 class Parser {
 
-  const CLI_OPTIONS = 'dj';
+  const CLI_OPTIONS = 'dj::';
   
   
   private $iDir;
@@ -66,7 +66,7 @@ class Parser {
   
   public static function print_i( array $urlItems, array $cliOptions ) {
     if( isset( $cliOptions[ 'j' ] ) ) {
-      self::print_java( $urlItems );
+      self::print_json( $urlItems, $cliOptions[ 'j' ] == 1 ? 1 : 0 );
     }
     else {
       self::print_debug( $urlItems );
@@ -78,9 +78,20 @@ class Parser {
       echo $urlItem. PHP_EOL;
   }
   
-  public static function print_java( array $urlItems ) {
+  public static function print_json( array $urlItems, $pretty = 0 ) {
+    $arr = [];
+    $flags = 0;
+    
+    if( $pretty == 1 ) {
+      $flags |= JSON_PRETTY_PRINT;
+    }
+    
     foreach( $urlItems as $urlItem )
-      echo '### '. $urlItem. PHP_EOL;
+      $arr []= [
+        'title' => $urlItem->getTitle(),
+        'url' => $urlItem->getUrl(),
+      ];
+    echo json_encode( $arr, $flags ). PHP_EOL;
   }
 }
 
