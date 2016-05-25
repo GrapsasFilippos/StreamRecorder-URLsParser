@@ -20,6 +20,7 @@ class URLListItem {
   
   
   private function setUrl( $url ) {
+//     echo $url. PHP_EOL;
     $streamURL = $url;
     if( preg_match( '/\.pls\??.*$/', $url ) === 1 ) {
       $plsFile = file_get_contents( $url );

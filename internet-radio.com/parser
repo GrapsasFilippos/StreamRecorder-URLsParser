@@ -5,6 +5,8 @@ namespace com\grapsas\streamRecorder\urlParser;
 
 
 include_once( dirname( __FILE__ ). '/URLListItem.inc' );
+include_once( dirname( __FILE__ ). '/../lib/PHP-CLI-Progress-Bar/ProgressBar/Manager.php' );
+include_once( dirname( __FILE__ ). '/../lib/PHP-CLI-Progress-Bar/ProgressBar/Registry.php' );
 
 
 class Parser {
@@ -39,6 +41,7 @@ class Parser {
   
   
   public static function parse( $path ) {
+    
     $fData = file_get_contents( $path );
     
     $urls = [];
@@ -55,9 +58,14 @@ class Parser {
       $titles [] = trim( strip_tags( $m ) );
 //     print_r( $titles );
 
+    $progressBar = new \ProgressBar\Manager( 0, count( $urls ) );
     $urlItems = [];
+    $i = 0;
+    $progressBar->update( 0 );
     while( count( $urls ) > 0 ) {
       $urlItems []= new URLListItem( array_pop( $urls ), array_pop( $titles ) );
+      $i++;
+      $progressBar->update( $i );
     }
     
     return $urlItems;

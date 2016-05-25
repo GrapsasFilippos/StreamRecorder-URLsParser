@@ -1,0 +1,3 @@
+[submodule "lib/PHP-CLI-Progress-Bar"]
+	path = lib/PHP-CLI-Progress-Bar
+	url = https://github.com/GrapsasFilippos/PHP-CLI-Progress-Bar.git
