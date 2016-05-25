@@ -10,12 +10,23 @@ class URLListItem {
   
   
   public function __construct( $url, $title ) {
-    $this->url = $url;
+    $this->setUrl( $url );
     $this->title = $title;
   }
   
   public function __toString() {
     return '\''. $this->title. '\': \''. $this->url. '\'';
+  }
+  
+  
+  private function setUrl( $url ) {
+    $streamURL = $url;
+    if( preg_match( '/\.pls\??.*$/', $url ) === 1 ) {
+      $plsFile = file_get_contents( $url );
+      preg_match( '/^File1=(.*)/m', $plsFile, $matches );
+      $streamURL = $matches[ 1 ];
+    }
+    $this->url = $streamURL;
   }
   
   
